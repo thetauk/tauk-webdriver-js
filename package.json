@@ -12,7 +12,7 @@
   "scripts": {
     "test": "mocha -r ts-node/register 'tests/**/*.ts'",
     "tsc": "tsc -p tsconfig.json",
-    "prepublishOnly": "npm run tsc"
+    "prepublishOnly": "npm run tsc && npm version patch"
   },
   "repository": {
     "type": "git",
