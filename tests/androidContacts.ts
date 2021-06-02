@@ -1,4 +1,5 @@
 import { remote, RemoteOptions, Browser } from "webdriverio";
+import dotenv from "dotenv";
 import ProjectCapabilities from "./projectCapabilities";
 import AndroidContacts from "./viewObjects/androidContacts";
 import Tauk from "../dist/tauk";
@@ -7,7 +8,9 @@ import Tauk from "../dist/tauk";
 describe('Android Contacts App Test', function () {
   let driver: Browser<"async">;
   this.timeout(40000);
-  const tauk: Tauk = new Tauk("5WOnv-VEmlZbhCQUW03K38PK7SKA", "kXS3BVMiQ");
+
+  dotenv.config();
+  const tauk: Tauk = new Tauk(`${process.env.API_TOKEN}`, `${process.env.PROJECT_ID}`);
 
   before(async function () {
     const remoteOptions: RemoteOptions = ProjectCapabilities.androidBaseCapabilities(
