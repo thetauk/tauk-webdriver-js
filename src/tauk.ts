@@ -226,11 +226,12 @@ class Tauk {
           this.filename,
           this.getDesiredCapabilities(),
           await this.getLog(),
-          await this.getScreenshot(),
+          null,
           await this.getPageSource(),
           this.formatError(error)
         );
 
+        testResult.screenshot = await this.getScreenshot();
         this.testResults.push(testResult);
         throw error;
       }
@@ -241,11 +242,12 @@ class Tauk {
         this.filename,
         this.getDesiredCapabilities(),
         await this.getLog(),
-        await this.getScreenshot(),
+        null,
         await this.getPageSource(),
         null
       );
 
+      testResult.screenshot = await this.getScreenshot();
       this.testResults.push(testResult);
     });
   }
