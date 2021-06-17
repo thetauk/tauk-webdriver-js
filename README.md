@@ -2,7 +2,7 @@
 
 ## Installation
 ```bash
-$ npm install @tauk.com/tauk
+$ npm install --save-dev  @tauk.com/tauk
 ```
 
 ## Usage
