@@ -1,16 +1,15 @@
 import { remote, RemoteOptions, Browser } from "webdriverio";
-import dotenv from "dotenv";
 import ProjectCapabilities from "./projectCapabilities";
 import AndroidContacts from "./viewObjects/androidContacts";
-import Tauk from "../dist/tauk";
+import Tauk from "../src/tauk"; // Import the Tauk package
 
 
 describe('Android Contacts App Test', function () {
   let driver: Browser<"async">;
   this.timeout(40000);
 
-  dotenv.config();
-  const tauk: Tauk = new Tauk(`${process.env.API_TOKEN}`, `${process.env.PROJECT_ID}`);
+  // Create an instance of the Tauk class and provide your API TOKEN and PROJECT ID
+  const tauk: Tauk = new Tauk("API-TOKEN", "PROJECT-ID");
 
   before(async function () {
     const remoteOptions: RemoteOptions = ProjectCapabilities.androidBaseCapabilities(
@@ -21,10 +20,12 @@ describe('Android Contacts App Test', function () {
       }
     );
     driver = await remote(remoteOptions);
+    // Provide your driver object 
     tauk.setDriver(driver);
   });
 
   it('Add new contact', async function () {
+    // Wrap the test case logic you want to monitor in tauk.observe()
     await tauk.observe(`${this.test?.title}`, async () => {
 
       if ((await driver.$(AndroidContacts.locators.floatingActionButton))
@@ -55,6 +56,7 @@ describe('Android Contacts App Test', function () {
     const allCapabilities: any = driver.capabilities;
     const desiredCapabilities = allCapabilities.desired;
     console.log(desiredCapabilities);
+    // Call tauk.upload() before you end your session
     await tauk.upload();
     await driver.deleteSession();
   });
