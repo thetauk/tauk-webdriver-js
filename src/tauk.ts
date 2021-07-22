@@ -252,22 +252,22 @@ class Tauk {
     });
   }
 
-  public async upload() {
+  public async upload(customSessionUploadURL?: string) {
     for (let i = 0; i < this.testResults.length; i++) {
       let testResult = this.testResults[i];
       let payload = {
-        'test-status': TestStatusType[testResult.testStatus].toLowerCase(),
-        'test-name': testResult.testName,
-        'test-filename': testResult.filename,
+        'test_status': TestStatusType[testResult.testStatus].toLowerCase(),
+        'test_name': testResult.testName,
+        'test_filename': testResult.filename,
         'tags': testResult.desiredCaps,
         'log': (testResult.appiumLog) ? this.formatLog(testResult.appiumLog) : null,
         'screenshot': (testResult.screenshot) ? testResult.screenshot : null,
         'view': (testResult.pageSource) ? testResult.pageSource : null,
-        'errors': (testResult.error) ? testResult.error : null,
-        'automation-type': 'appium',
-        'sdk-language': 'javascript'
+        'error': (testResult.error) ? testResult.error : null,
+        'automation_type': 'appium',
+        'language': 'javascript'
       }
-      await sessionUpload(this.apiToken, this.projectId, payload, __dirname);
+      await sessionUpload(this.apiToken, this.projectId, payload, __dirname, customSessionUploadURL);
     }
   }
 

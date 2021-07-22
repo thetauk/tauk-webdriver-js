@@ -1,10 +1,11 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 import logError from './logError';
 
-async function sessionUpload(apiToken: string, projectId: string, testResult: object, logFilePath?: string) {
-  dotenv.config();
-  const uploadUrl = (`${process.env.TAUK_ENV}` === 'local') ? `${process.env.SESSION_UPLOAD_URL}` : "https://www.tauk.com/api/v1/session/upload";
+async function sessionUpload(apiToken: string, projectId: string, testResult: object, logFilePath?: string, customSessionUploadURL?: string) {
+  let uploadUrl = "https://www.tauk.com/api/v1/session/upload"
+  if (customSessionUploadURL) {
+    uploadUrl = customSessionUploadURL;
+  }
   let response = await axios.post(uploadUrl, testResult, {
     headers: {
       'api-token': apiToken,
