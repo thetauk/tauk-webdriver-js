@@ -1,7 +1,9 @@
 import * as path from "path";
+import { performance } from "perf_hooks";
 import TestStatusType from './enums/testStatusType';
 import logError from './utils/logError';
 import sessionUpload from './utils/sessionUpload';
+import calculateElapsedTime from "./utils/calculateElapsedTime";
 
 class TestResult {
   testStatus: TestStatusType;
@@ -12,8 +14,9 @@ class TestResult {
   screenshot: string | null;
   pageSource: string | null;
   error: object | null;
+  elapsedTimeMS: number | null;
 
-  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null) {
+  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null, elapsedTimeMS: number | null) {
     this.testStatus = testStatus;
     this.testName = testName;
     this.filename = filename;
@@ -22,6 +25,7 @@ class TestResult {
     this.screenshot = screenshot;
     this.pageSource = pageSource;
     this.error = error;
+    this.elapsedTimeMS = elapsedTimeMS;
   }
 }
 
@@ -218,8 +222,11 @@ class Tauk {
       return testCaseFunction();
     }
 
+    let startTime = performance.now();
+
     return testCaseFunction().catch(
       async (error: Error) => {
+        let failureEndTime = performance.now();
         testResult = new TestResult(
           (this.excluded === true) ? TestStatusType.Excluded : TestStatusType.Failed,
           testCaseName,
@@ -228,7 +235,8 @@ class Tauk {
           await this.getLog(),
           null,
           await this.getPageSource(),
-          this.formatError(error)
+          this.formatError(error),
+          calculateElapsedTime(startTime, failureEndTime)
         );
 
         testResult.screenshot = await this.getScreenshot();
@@ -236,6 +244,7 @@ class Tauk {
         throw error;
       }
     ).then(async () => {
+      let successEndTime = performance.now();
       testResult = new TestResult(
         (this.excluded === true) ? TestStatusType.Excluded : TestStatusType.Passed,
         testCaseName,
@@ -244,7 +253,8 @@ class Tauk {
         await this.getLog(),
         null,
         await this.getPageSource(),
-        null
+        null,
+        calculateElapsedTime(startTime, successEndTime)
       );
 
       testResult.screenshot = await this.getScreenshot();
@@ -265,7 +275,8 @@ class Tauk {
         'view': (testResult.pageSource) ? testResult.pageSource : null,
         'error': (testResult.error) ? testResult.error : null,
         'automation_type': 'appium',
-        'language': 'javascript'
+        'language': 'javascript',
+        'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null
       }
       await sessionUpload(this.apiToken, this.projectId, payload, __dirname, customSessionUploadURL);
     }
