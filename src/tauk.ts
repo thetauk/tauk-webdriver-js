@@ -4,6 +4,7 @@ import TestStatusType from './enums/testStatusType';
 import logError from './utils/logError';
 import sessionUpload from './utils/sessionUpload';
 import calculateElapsedTime from "./utils/calculateElapsedTime";
+import getPlatformName from "./utils/getPlatformName";
 
 class TestResult {
   testStatus: TestStatusType;
@@ -15,8 +16,9 @@ class TestResult {
   pageSource: string | null;
   error: object | null;
   elapsedTimeMS: number | null;
+  platformName: string | null;
 
-  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null, elapsedTimeMS: number | null) {
+  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null, elapsedTimeMS: number | null, platformName: string | null) {
     this.testStatus = testStatus;
     this.testName = testName;
     this.filename = filename;
@@ -26,6 +28,7 @@ class TestResult {
     this.pageSource = pageSource;
     this.error = error;
     this.elapsedTimeMS = elapsedTimeMS;
+    this.platformName = platformName;
   }
 }
 
@@ -236,7 +239,8 @@ class Tauk {
           null,
           await this.getPageSource(),
           this.formatError(error),
-          calculateElapsedTime(startTime, failureEndTime)
+          calculateElapsedTime(startTime, failureEndTime),
+          getPlatformName(this.driver)
         );
 
         testResult.screenshot = await this.getScreenshot();
@@ -254,7 +258,8 @@ class Tauk {
         null,
         await this.getPageSource(),
         null,
-        calculateElapsedTime(startTime, successEndTime)
+        calculateElapsedTime(startTime, successEndTime),
+        getPlatformName(this.driver)
       );
 
       testResult.screenshot = await this.getScreenshot();
@@ -276,7 +281,8 @@ class Tauk {
         'error': (testResult.error) ? testResult.error : null,
         'automation_type': 'appium',
         'language': 'javascript',
-        'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null
+        'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null,
+        'platform': (testResult.platformName) ? testResult.platformName : null
       }
       await sessionUpload(this.apiToken, this.projectId, payload, __dirname, customSessionUploadURL);
     }

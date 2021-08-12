@@ -53,9 +53,6 @@ describe('Android Contacts App Test', function () {
   });
 
   after(async function () {
-    const allCapabilities: any = driver.capabilities;
-    const desiredCapabilities = allCapabilities.desired;
-    console.log(desiredCapabilities);
     // Call tauk.upload() before you end your session
     await tauk.upload();
     await driver.deleteSession();
