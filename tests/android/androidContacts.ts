@@ -1,7 +1,7 @@
 import { remote, RemoteOptions, Browser } from "webdriverio";
 import ProjectCapabilities from "./projectCapabilities";
 import AndroidContacts from "./viewObjects/androidContacts";
-import Tauk from "../src/tauk"; // Import the Tauk package
+import Tauk from "../../src/tauk"; // Import the Tauk package
 
 
 describe('Android Contacts App Test', function () {

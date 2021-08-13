@@ -5,6 +5,7 @@ import logError from './utils/logError';
 import sessionUpload from './utils/sessionUpload';
 import calculateElapsedTime from "./utils/calculateElapsedTime";
 import getPlatformName from "./utils/getPlatformName";
+import flattenDesiredCaps from "./utils/flattenDesiredCaps";
 
 class TestResult {
   testStatus: TestStatusType;
@@ -138,13 +139,13 @@ class Tauk {
     return output;
   }
 
-  private getDesiredCapabilities() {
-    try {
-      const allCapabilities: any = this.driver.capabilities;
-      const desiredCapabilities = allCapabilities.desired;
-      return desiredCapabilities;
-    } catch (error) {
-      logError(__dirname, error);
+  private getDesiredCapabilities(): object | null {
+    const allCapabilities: any = this.driver.capabilities;
+    if ("browserName" in allCapabilities) {
+      return flattenDesiredCaps(allCapabilities)
+    } else if ("platformName" in allCapabilities.desired) {
+      return allCapabilities.desired;
+    } else {
       return null;
     }
   }
@@ -279,8 +280,8 @@ class Tauk {
         'screenshot': (testResult.screenshot) ? testResult.screenshot : null,
         'view': (testResult.pageSource) ? testResult.pageSource : null,
         'error': (testResult.error) ? testResult.error : null,
-        'automation_type': 'appium',
-        'language': 'javascript',
+        'automation_type': ("browserName" in this.driver.capabilities) ? "Selenium" : "Appium",
+        'language': 'JavaScript',
         'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null,
         'platform': (testResult.platformName) ? testResult.platformName : null
       }
