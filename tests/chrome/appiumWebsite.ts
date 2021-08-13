@@ -33,7 +33,7 @@ describe("Appium IO", function () {
 	it("Navigates Getting Started page", async function () {
 		// Wrap the test case logic you want to monitor in tauk.observe()
 		await tauk.observe(`${this.test?.title}`, async () => {
-			testDetails.driver.navigateTo("https://appium.io/")
+			testDetails.driver!.navigateTo("https://appium.io/")
 			await clickElement(
 				testDetails.driver,
 				AppiumIO.HomePage.navButton
