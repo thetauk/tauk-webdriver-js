@@ -11,7 +11,7 @@ function flattenDesiredCaps(desiredCaps: any): DesiredCapObj {
 			let tempObj = flattenDesiredCaps(desiredCaps[key]);
 			for (let tempKey in tempObj) {
 				// store the tempObj in the result
-				result[key + "." + tempKey] = tempObj[tempKey];
+				result[key + "_" + tempKey] = tempObj[tempKey];
 			}
 		} else { // store object directly in result
 			result[key] = desiredCaps[key];
