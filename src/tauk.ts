@@ -5,6 +5,7 @@ import logError from './utils/logError';
 import sessionUpload from './utils/sessionUpload';
 import calculateElapsedTime from "./utils/calculateElapsedTime";
 import getPlatformName from "./utils/getPlatformName";
+import getPlatformVersion from "./utils/getPlatformVersion";
 import flattenDesiredCaps from "./utils/flattenDesiredCaps";
 
 class TestResult {
@@ -283,7 +284,8 @@ class Tauk {
         'automation_type': ("browserName" in this.driver.capabilities) ? "Selenium" : "Appium",
         'language': 'JavaScript',
         'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null,
-        'platform': (testResult.platformName) ? testResult.platformName : null
+        'platform': (testResult.platformName) ? testResult.platformName : null,
+        'platform_version': getPlatformVersion(this.driver)
       }
       await sessionUpload(this.apiToken, this.projectId, payload, __dirname, customSessionUploadURL);
     }
