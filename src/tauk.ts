@@ -204,11 +204,11 @@ class Tauk {
     });
 
     return {
-      errorType: error.name,
-      errorMsg: error.message,
-      lineNumber: formattedErrorStack[1].lineNumber,
-      invokedFunc: formattedErrorStack[1].functionName,
-      codeExecuted: error.message
+      error_type: error.name,
+      error_msg: error.message,
+      line_number: formattedErrorStack[1].lineNumber,
+      invoked_func: formattedErrorStack[1].functionName,
+      code_executed: error.message
     }
   }
 
