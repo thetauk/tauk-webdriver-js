@@ -1,6 +1,6 @@
 {
   "name": "@tauk.com/tauk",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Helper package to facilitate Tauk's reporting for webdriver-based tests.",
   "main": "dist/tauk.js",
   "files": [
