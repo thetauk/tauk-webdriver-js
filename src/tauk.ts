@@ -19,8 +19,9 @@ class TestResult {
   error: object | null;
   elapsedTimeMS: number | null;
   platformName: string | null;
+  automationType: string;
 
-  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null, elapsedTimeMS: number | null, platformName: string | null) {
+  constructor(testStatus: TestStatusType, testName: string, filename: string | null, desiredCaps: object | null, appiumLog: any[] | null, screenshot: string | null, pageSource: string | null, error: object | null, elapsedTimeMS: number | null, platformName: string | null, automationType: string) {
     this.testStatus = testStatus;
     this.testName = testName;
     this.filename = filename;
@@ -31,6 +32,7 @@ class TestResult {
     this.error = error;
     this.elapsedTimeMS = elapsedTimeMS;
     this.platformName = platformName;
+    this.automationType = automationType;
   }
 }
 
@@ -112,12 +114,14 @@ class Tauk {
       end: -5
     }
 
-    try {
-      let log = await this.driver.getLogs('server');
-      return log.slice(sliceRange.start, sliceRange.end);
-    } catch (error) {
-      logError(__dirname, error);
-      return null;
+    if (this.getAutomationType() === "Appium") {
+      try {
+        let log = await this.driver.getLogs('server');
+        return log.slice(sliceRange.start, sliceRange.end);
+      } catch (error) {
+        logError(__dirname, error);
+        return null;
+      }
     }
   }
 
@@ -148,6 +152,15 @@ class Tauk {
       return allCapabilities.desired;
     } else {
       return null;
+    }
+  }
+
+  private getAutomationType(): string {
+    const allCapabilities: any = this.driver.capabilities;
+    if ("browserName" in allCapabilities) {
+      return "Selenium";
+    } else {
+      return "Appium";
     }
   }
 
@@ -242,7 +255,8 @@ class Tauk {
           await this.getPageSource(),
           this.formatError(error),
           calculateElapsedTime(startTime, failureEndTime),
-          getPlatformName(this.driver)
+          getPlatformName(this.driver),
+          this.getAutomationType()
         );
 
         testResult.screenshot = await this.getScreenshot();
@@ -261,7 +275,8 @@ class Tauk {
         await this.getPageSource(),
         null,
         calculateElapsedTime(startTime, successEndTime),
-        getPlatformName(this.driver)
+        getPlatformName(this.driver),
+        this.getAutomationType()
       );
 
       testResult.screenshot = await this.getScreenshot();
@@ -281,7 +296,7 @@ class Tauk {
         'screenshot': (testResult.screenshot) ? testResult.screenshot : null,
         'view': (testResult.pageSource) ? testResult.pageSource : null,
         'error': (testResult.error) ? testResult.error : null,
-        'automation_type': ("browserName" in this.driver.capabilities) ? "Selenium" : "Appium",
+        'automation_type': testResult.automationType,
         'language': 'JavaScript',
         'elapsed_time_ms': (testResult.elapsedTimeMS) ? testResult.elapsedTimeMS : null,
         'platform': (testResult.platformName) ? testResult.platformName : null,
