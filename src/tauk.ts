@@ -43,8 +43,9 @@ class Tauk {
   private filename: string | null;
   private excluded?: boolean;
   private testResults: TestResult[];
+  private disableScreenshotCapture?: boolean;
 
-  constructor(apiToken: string, projectId: string, configOptions?: { driver?: any, excluded?: boolean }) {
+  constructor(apiToken: string, projectId: string, configOptions?: { driver?: any, excluded?: boolean, disableScreenshotCapture?: boolean }) {
     this.testResults = [];
     this.apiToken = apiToken;
     this.projectId = projectId;
@@ -56,6 +57,10 @@ class Tauk {
 
     if (configOptions?.excluded) {
       this.excluded = configOptions.excluded;
+    }
+
+    if (configOptions?.disableScreenshotCapture) {
+      this.disableScreenshotCapture = configOptions.disableScreenshotCapture;
     }
 
   }
@@ -258,8 +263,11 @@ class Tauk {
           getPlatformName(this.driver),
           this.getAutomationType()
         );
-
-        testResult.screenshot = await this.getScreenshot();
+        if (this.disableScreenshotCapture === false) {
+          testResult.screenshot = await this.getScreenshot();
+        } else {
+          testResult.screenshot = null;
+        }
         this.testResults.push(testResult);
         throw error;
       }
@@ -278,8 +286,11 @@ class Tauk {
         getPlatformName(this.driver),
         this.getAutomationType()
       );
-
-      testResult.screenshot = await this.getScreenshot();
+      if (this.disableScreenshotCapture === false) {
+        testResult.screenshot = await this.getScreenshot();
+      } else {
+        testResult.screenshot = null;
+      }
       this.testResults.push(testResult);
     });
   }
