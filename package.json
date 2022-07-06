@@ -1,6 +1,6 @@
 {
   "name": "@tauk.com/tauk",
-  "version": "1.0.10",
+  "version": "2.0.0",
   "description": "Helper package to facilitate Tauk's reporting for webdriver-based tests.",
   "main": "dist/tauk.js",
   "files": [
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "mocha -r ts-node/register 'tests/**/*.ts'",
-    "tsc": "tsc -p tsconfig.json",
+    "tsc": "tsc -p tsconfig.bak.json",
     "prepublishOnly": "npm run tsc"
   },
   "repository": {
@@ -36,9 +36,12 @@
     "@wdio/cli": "^7.6.1",
     "mocha": "^10.0.0",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.7.4"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "async-mutex": "^0.3.2",
+    "axios": "^0.27.2",
+    "winston": "^3.8.0",
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }
