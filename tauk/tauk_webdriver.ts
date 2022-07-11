@@ -1,4 +1,4 @@
-import {TaukContext} from "./context/context.js";
+import {TaukContext} from "./context/context";
 import {TaukConfig} from "./config";
 import {Mutex} from 'async-mutex';
 import winston, {Logger} from "winston";
@@ -18,7 +18,7 @@ const setupLogger = () => {
         logLevel = 'info'
     }
 
-    return winston.createLogger({
+    const l = winston.createLogger({
         level: logLevel.toLowerCase(),
         format: winston.format.combine(
             winston.format.splat(),
@@ -49,6 +49,8 @@ const setupLogger = () => {
             })
         ],
     })
+    l.debug('Initialized logger')
+    return l;
 }
 
 const logger = setupLogger()
@@ -63,8 +65,8 @@ class Tauk {
     }
 
     private static destroy(eventType: any) {
-        console.log("destroying #############", eventType)
-        throw Error('test')
+        // TODO: Setup exit handler
+        throw Error('destroy')
     }
 
     public static getInstance(taukConfig?: TaukConfig) {
@@ -77,10 +79,15 @@ class Tauk {
             Tauk.instance = new PrivateTauk(taukConfig);
             Tauk._context = new TaukContext(taukConfig)
 
-            // TODO: Setup exit handler
+            process.on('exit', Tauk.destroy)
+
         }
 
         return Tauk.instance
+    }
+
+    public static isInitialized(): boolean {
+        return !!Tauk.instance;
     }
 
 

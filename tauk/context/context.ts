@@ -26,14 +26,12 @@ class TaukContext {
             try {
                 this.runId = await this.api.initializeRun(this.testData, runId)
             } catch (e) {
-                console.log(e)
+                throw e;
             } finally {
-                console.log('### init complete in finally')
+                // TODO: ?
             }
-
         })()
     }
-
 
 }
 
