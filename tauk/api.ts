@@ -3,6 +3,8 @@ import {logger, Tauk} from "./tauk_webdriver";
 import axios, {AxiosRequestConfig, AxiosRequestHeaders, Method} from "axios";
 import {TaukException} from "./exceptions";
 import {TestData} from "./context/test_data";
+import {readFileSync} from "fs";
+import {AttachmentTypes} from "./enums";
 
 const REQUEST_TIMEOUT = 30000;
 
@@ -44,17 +46,13 @@ class TaukApi {
 
     public async request(method: Method, url: string, data?: object, headers?: AxiosRequestHeaders,
                          timeout = REQUEST_TIMEOUT) {
-        // const authHeaders = new Map([['Authorization', `Bearer ${this.apiToken}`]])
         url = 'https://fec88f12-667e-48d5-abc0-dd9c50c17f2f.mock.pstmn.io/api/v1/execution/projectid/initialize'
-        console.log(`Making request ${method}: ${url}:`, headers, data)
         const response = await this.axiosInstance.request({
             method: method,
             url: url,
             headers: headers,
             data: data
         })
-        console.log("#######################")
-        console.log(`response:`, response)
         return response
     }
 
@@ -79,16 +77,79 @@ class TaukApi {
         logger.debug(`Initializing run with: url[%O], body[%O]`, url, body)
         const response = await this.request('POST', url, body)
         if (response.status !== 200) {
-            logger.error(`Failed to initialize Tauk execution. Response[${response.status}]: ${response.data}`)
+            logger.error(`Failed to initialize Tauk execution. Response[${response.status}]: ${JSON.stringify(response.data)}`)
             throw new TaukException('failed to initialize tauk execution')
         }
 
-        logger.debug(`Response: ${response.data}`)
+        logger.debug(`Response: ${JSON.stringify(response.data)}`)
         this.runId = response.data.run_id
         return this.runId
     }
 
 
+    public async testStart() {
+        // TODO
+    }
+
+    public async testFinish() {
+        // TODO
+    }
+
+    public async upload(testData: TestData) {
+        const url = `${this.API_URL}/execution/${this.projectId}/${this.runId}/report/upload`
+        const headers = {'Content-Encoding': 'gzip'}
+
+        logger.debug(`Uploading test: url[${url}], headers[${headers}], body[${(testData)}]`) // TODO: Shorten testData
+
+        const response = await this.request('POST', url, testData)
+        if (response.status !== 200) {
+            logger.error(`Failed to upload test. Response[${response.status}]: ${JSON.stringify(response.data)}`)
+            throw new TaukException('failed to upload test results')
+        }
+
+        logger.debug(`Response: ${JSON.stringify(response.data)}`)
+        return response.data.result
+    }
+
+    public async uploadAttachment(filePath: string, attachmentType: AttachmentTypes, testId: string) {
+        if (!testId) {
+            throw new TaukException(`invalid test_id ${testId}`)
+        }
+        const url = `${this.API_URL}/execution/${this.projectId}/${this.runId}/attachment/upload/${testId}`
+        const headers = {'Tauk-Attachment-Type': `${attachmentType}`}
+
+        logger.debug(`Uploading test attachment: url[${url}], headers[${headers}], file[${filePath}]`)
+        const body = readFileSync(filePath)
+        const response = await this.request('POST', url, body)
+        if (response.status !== 200) {
+            logger.error(`Failed to upload attachment. Response[${response.status}]: ${JSON.stringify(response.data)}`)
+            throw new TaukException('failed to upload attachment')
+        }
+    }
+
+    public async finishExecution(filePath: string | undefined) {
+        const endTimestamp = new Date().getTime();
+        const url = `${this.API_URL}/execution/${this.projectId}/${this.runId}/finish/${endTimestamp}`
+
+        if (!filePath) {
+            logger.debug(`Sending execution finish: url[${url}]`)
+            const response = await this.request('POST', url)
+            if (response.status !== 200) {
+                logger.error(`Failed to upload execution error logs. Response[${response.status}]: ${JSON.stringify(response.data)}`)
+                throw new TaukException('failed to upload execution error logs')
+            }
+            return
+        }
+
+        const headers = {'Content-Encoding': 'gzip'}
+        logger.debug(`Sending execution finish: url[${url}], headers[${headers}], file[${filePath}]`)
+        const body = readFileSync(filePath)
+        const response = await this.request('POST', url, body, headers)
+        if (response.status !== 200) {
+            logger.error(`Failed to upload execution error logs. Response[${response.status}]: ${JSON.stringify(response.data)}`)
+            throw new TaukException('failed to upload execution error logs')
+        }
+    }
 }
 
 export {TaukApi}
