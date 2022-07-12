@@ -46,12 +46,12 @@ class TaukApi {
 
     public async request(method: Method, url: string, data?: object, headers?: AxiosRequestHeaders,
                          timeout = REQUEST_TIMEOUT) {
-        url = 'https://fec88f12-667e-48d5-abc0-dd9c50c17f2f.mock.pstmn.io/api/v1/execution/projectid/initialize'
         const response = await this.axiosInstance.request({
             method: method,
             url: url,
             headers: headers,
-            data: data
+            data: data,
+            timeout: timeout
         })
         return response
     }

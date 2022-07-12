@@ -4,22 +4,22 @@ import {TaukException} from "../exceptions";
 
 abstract class TestCase {
 
-    private _id: string | undefined
-    private _customName: string | undefined
-    private _methodName: string | undefined
-    private _status: string | undefined
+    private _id?: string
+    private _customName?: string
+    private _methodName?: string
+    private _status?: string
     private _excluded: boolean = false
-    private _automationType: AutomationTypes | undefined
-    private _platformName: PlatformNames | undefined
-    private _platformVersion: string | undefined
-    private _browserName: string | undefined
-    private _browserVersion: string | undefined
-    private _startTimestamp: number | undefined
-    private _endTimestamp: number | undefined
-    private _timezone: string | undefined
-    private _error: TypeError | undefined
-    private _screenshot: string | undefined
-    private _view: string | undefined
+    private _automationType?: AutomationTypes
+    private _platformName?: PlatformNames
+    private _platformVersion?: string
+    private _browserName?: string
+    private _browserVersion?: string
+    private _startTimestamp?: number
+    private _endTimestamp?: number
+    private _timezone?: string
+    private _error?: TypeError
+    private _screenshot?: string
+    private _view?: string
     private _codeContext = {}
 
     private _browserDebugger = {address: '', pageId: ''}
