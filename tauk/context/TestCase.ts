@@ -1,26 +1,27 @@
-import {AutomationTypes, PlatformNames, TaukEnum, TestStatus} from "../enums";
-import {logger} from "../tauk_webdriver";
-import {TaukException} from "../exceptions";
+import { AutomationTypes, PlatformNames, TaukEnum, TestStatus } from "../enums";
+import { logger } from "../taukWebdriver";
+import { TaukException } from "../exceptions";
+import { CodeContext, TestCaseError } from "../types";
 
-abstract class TestCase {
+export default abstract class TestCase {
 
-    private _id?: string
-    private _customName?: string
-    private _methodName?: string
-    private _status?: string
-    private _excluded: boolean = false
-    private _automationType?: AutomationTypes
-    private _platformName?: PlatformNames
-    private _platformVersion?: string
-    private _browserName?: string
-    private _browserVersion?: string
-    private _startTimestamp?: number
-    private _endTimestamp?: number
-    private _timezone?: string
-    private _error?: TypeError
-    private _screenshot?: string
-    private _view?: string
-    private _codeContext = {}
+    private _id?: string;
+    private _customName?: string;
+    private _methodName?: string;
+    private _status?: TestStatus;
+    private _excluded: boolean = false;
+    private _automationType?: AutomationTypes;
+    private _platformName?: PlatformNames;
+    private _platformVersion?: string;
+    private _browserName?: string;
+    private _browserVersion?: string;
+    private _startTimestamp?: number;
+    private _endTimestamp?: number;
+    private _timezone?: string;
+    private _error?: TestCaseError;
+    private _screenshot?: string;
+    private _view?: string;
+    private _codeContext: CodeContext[] = [];
 
     private _browserDebugger = {address: '', pageId: ''}
     private _attachments = {}
@@ -29,6 +30,7 @@ abstract class TestCase {
     private _log = [{}]
 
     protected constructor() {
+        this.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
 
     get id(): string | undefined {
@@ -55,11 +57,11 @@ abstract class TestCase {
         this._methodName = value;
     }
 
-    get status(): string | undefined {
+    get status(): TestStatus | undefined {
         return this._status;
     }
 
-    set status(value: string | undefined) {
+    set status(value: TestStatus | undefined) {
         this._status = value;
     }
 
@@ -135,11 +137,11 @@ abstract class TestCase {
         this._timezone = value;
     }
 
-    get error(): TypeError | undefined {
+    get error(): TestCaseError | undefined {
         return this._error;
     }
 
-    set error(value: TypeError | undefined) {
+    set error(value: TestCaseError | undefined) {
         this._error = value;
     }
 
@@ -159,11 +161,11 @@ abstract class TestCase {
         this._view = value;
     }
 
-    get codeContext(): {} {
+    get codeContext(): CodeContext[] {
         return this._codeContext;
     }
 
-    set codeContext(value: {}) {
+    set codeContext(value: CodeContext[]) {
         this._codeContext = value;
     }
 
@@ -188,25 +190,25 @@ abstract class TestCase {
     }
 
     public setBrowserDebugger(address: string, pageId: string): void {
-        this._browserDebugger.address = address
-        this._browserDebugger.pageId = pageId
+        this._browserDebugger.address = address;
+        this._browserDebugger.pageId = pageId;
     }
 
     public addAttachment(filePath: string, type: string) {
-        logger.debug(`Adding attachment ${type}: ${filePath}`)
+        logger.debug(`Adding attachment ${type}: ${filePath}`);
         // TODO: Implement this
     }
 
     public addTag(name: string, value: string) {
-        logger.debug(`Adding tag ${name}: ${value}`)
-        this._tags[name] = value
+        logger.debug(`Adding tag ${name}: ${value}`);
+        this._tags[name] = value;
     }
 
     public addUserData(name: string, value: string | number) {
         if (name.length > 100 || (typeof value == "string")) {
-            throw new TaukException('user data is too large')
+            throw new TaukException('user data is too large');
         }
-        this._userData[name] = value
+        this._userData[name] = value;
     }
 
     public toJson(): { [key: string]: any } {
@@ -230,9 +232,7 @@ abstract class TestCase {
             'tags': this.tags,
             'user_data': this.userData,
             'log': this.log,
-        }
+        };
         return Object.fromEntries(Object.entries(json).filter(([_, v]) => v != null));
     }
 }
-
-export {TestCase}

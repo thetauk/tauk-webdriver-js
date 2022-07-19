@@ -1,13 +1,16 @@
-import {TestCase} from "./test_case";
-import {TaukException} from "../exceptions";
-import {TestData} from "./test_data";
+import TestCase from "./TestCase";
+import TestData from "./TestData";
+import { TaukException } from "../exceptions";
 
-class TestSuite {
+
+export default class TestSuite {
+    private _filename!: string;
     private _name?: string | undefined
     private _className?: string | undefined
     private _testCases: TestCase[] = []
 
-    constructor(public _filename: string) {
+    constructor(filename: string) {
+        this.filename = filename;
     }
 
     get name(): string | undefined {
@@ -64,5 +67,3 @@ class TestSuite {
         }
     }
 }
-
-export {TestSuite}
