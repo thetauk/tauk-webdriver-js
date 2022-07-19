@@ -1,10 +1,10 @@
 import * as os from "os";
-import {logger, Tauk} from "./tauk_webdriver";
-import axios, {AxiosRequestConfig, AxiosRequestHeaders, Method} from "axios";
-import {TaukException} from "./exceptions";
-import {TestData} from "./context/test_data";
-import {readFileSync} from "fs";
-import {AttachmentTypes} from "./enums";
+import { logger, Tauk } from "./taukWebdriver";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders, Method } from "axios";
+import { TaukException } from "./exceptions";
+import TestData from "./context/TestData";
+import { readFileSync } from "fs";
+import { AttachmentTypes } from "./enums";
 
 const REQUEST_TIMEOUT = 30000;
 
@@ -152,4 +152,4 @@ class TaukApi {
     }
 }
 
-export {TaukApi}
+export { TaukApi }
