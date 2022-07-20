@@ -1,7 +1,7 @@
-import {TaukContext} from "./context/context";
-import {TaukConfig} from "./config";
-import {Mutex} from 'async-mutex';
-import winston, {Logger} from "winston";
+import TaukContext from "./context/Context";
+import { TaukConfig } from "./config";
+import { Mutex } from 'async-mutex';
+import winston, { Logger } from "winston";
 import path from "path";
 import * as os from "os";
 import * as fs from "fs";

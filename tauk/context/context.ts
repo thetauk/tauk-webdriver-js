@@ -1,8 +1,8 @@
-import {TaukConfig} from "../config";
-import {TaukApi} from "../api";
-import {TestData} from "./test_data";
+import TestData from "./TestData";
+import { TaukConfig } from "../config";
+import { TaukApi } from "../api";
 
-class TaukContext {
+export default class TaukContext {
     private readonly _projectRootDir: string
     public testData: TestData
     public api: TaukApi
@@ -34,5 +34,3 @@ class TaukContext {
     }
 
 }
-
-export {TaukContext}
