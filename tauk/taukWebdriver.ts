@@ -1,13 +1,10 @@
-import TaukContext from "./context/Context";
 import { TaukConfig } from "./config";
-import { Mutex } from 'async-mutex';
-import winston, { Logger } from "winston";
+import winston from "winston";
 import path from "path";
 import * as os from "os";
 import * as fs from "fs";
 import DailyRotateFile from "winston-daily-rotate-file";
-
-const mutex = new Mutex();
+import { TaukContext } from "./context/context";
 
 const setupLogger = () => {
     const logFilename = path.join(os.homedir(), '.tauk', 'logs', 'tauk-webdriver-js.log')
@@ -23,7 +20,7 @@ const setupLogger = () => {
         format: winston.format.combine(
             winston.format.splat(),
             winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
-            winston.format.printf(({level, message, timestamp, ...metadata}) => {
+            winston.format.printf(({level, message, timestamp}) => {
                 return `${timestamp} ${process.pid} ${level.toUpperCase()} ${message}`
             })
         ),
@@ -64,9 +61,10 @@ class Tauk {
         throw new Error('Use Tauk.getInstance()')
     }
 
-    private static destroy(eventType: any) {
+    private static destroy(eventType: any) { // TODO: Create event type field
         // TODO: Setup exit handler
-        throw Error('destroy')
+        // throw Error('destroy')
+
     }
 
     public static getInstance(taukConfig?: TaukConfig) {
@@ -94,16 +92,13 @@ class Tauk {
 }
 
 class PrivateTauk {
-    private static context: TaukContext
     private static config: TaukConfig
 
     constructor(taukConfig: TaukConfig) {
 
         PrivateTauk.config = taukConfig
     }
-
-
 }
 
 
-export {Tauk, logger}
+export { Tauk, logger }

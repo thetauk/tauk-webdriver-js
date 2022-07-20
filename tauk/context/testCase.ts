@@ -1,9 +1,9 @@
-import { AutomationTypes, PlatformNames, TaukEnum, TestStatus } from "../enums";
+import { AutomationTypes, PlatformNames, TestStatus } from "../enums";
 import { logger } from "../taukWebdriver";
 import { TaukException } from "../exceptions";
 import { CodeContext, TestCaseError } from "../types";
 
-export default abstract class TestCase {
+export abstract class TestCase {
 
     private _id?: string;
     private _customName?: string;

@@ -1,9 +1,8 @@
-import TestCase from "./TestCase";
-import TestData from "./TestData";
 import { TaukException } from "../exceptions";
+import { TestCase } from "./testCase";
 
 
-export default class TestSuite {
+export class TestSuite {
     private _filename!: string;
     private _name?: string | undefined
     private _className?: string | undefined
@@ -65,5 +64,15 @@ export default class TestSuite {
                 return test
             }
         }
+    }
+
+    public toJson(): { [key: string]: any } {
+        const json = {
+            'filename': this.filename,
+            'name': this.name,
+            'class_name': this.className,
+            'test_cases': this.testCases.map((t) => (t.toJson()))
+        }
+        return Object.fromEntries(Object.entries(json).filter(([_, v]) => v != null));
     }
 }

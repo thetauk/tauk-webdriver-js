@@ -1,8 +1,8 @@
-import TestSuite from "./TestSuite";
 import { logger } from "../taukWebdriver";
-import TestCase from "./TestCase";
+import { TestCase } from "./testCase";
+import { TestSuite } from "./testSuite";
 
-export default class TestData {
+export class TestData {
     public taukClientVersion?: string;
     public language: string = 'javascript';
     public startTimestamp: number = Date.now();

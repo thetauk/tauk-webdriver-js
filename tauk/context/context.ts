@@ -1,8 +1,8 @@
-import TestData from "./TestData";
+import { TestData } from "./testData";
 import { TaukConfig } from "../config";
 import { TaukApi } from "../api";
 
-export default class TaukContext {
+export class TaukContext {
     private readonly _projectRootDir: string
     public testData: TestData
     public api: TaukApi
@@ -32,5 +32,4 @@ export default class TaukContext {
             }
         })()
     }
-
 }

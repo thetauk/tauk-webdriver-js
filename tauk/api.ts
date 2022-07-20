@@ -1,8 +1,8 @@
 import * as os from "os";
 import { logger, Tauk } from "./taukWebdriver";
-import axios, { AxiosRequestConfig, AxiosRequestHeaders, Method } from "axios";
+import axios, { AxiosRequestHeaders, Method } from "axios";
 import { TaukException } from "./exceptions";
-import TestData from "./context/TestData";
+import { TestData } from "./context/testData";
 import { readFileSync } from "fs";
 import { AttachmentTypes } from "./enums";
 
@@ -46,14 +46,13 @@ class TaukApi {
 
     public async request(method: Method, url: string, data?: object, headers?: AxiosRequestHeaders,
                          timeout = REQUEST_TIMEOUT) {
-        const response = await this.axiosInstance.request({
+        return await this.axiosInstance.request({
             method: method,
             url: url,
             headers: headers,
             data: data,
             timeout: timeout
         })
-        return response
     }
 
     public async initializeRun(testData: TestData, runId?: string) {
