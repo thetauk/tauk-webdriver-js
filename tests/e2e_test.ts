@@ -1,4 +1,4 @@
-import {Tauk} from "../tauk/tauk_webdriver";
+import {Tauk} from "../tauk/taukWebdriver";
 
 const assert = require('assert');
 

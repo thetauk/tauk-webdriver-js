@@ -6,10 +6,10 @@ export class TestData {
     public taukClientVersion?: string;
     public language: string = 'javascript';
     public startTimestamp: number = Date.now();
-    public timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone
+    public timezone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
     public dst: boolean = this.isDstInEffect();
 
-    private _testSuites: TestSuite[] = []
+    private _testSuites: TestSuite[] = [];
 
     constructor() {
         // this.taukClientVersion = process.env.npm_package_version || 'develop'
@@ -31,28 +31,28 @@ export class TestData {
     public getTestSuite(filename: string): TestSuite | undefined {
         for (let suite of this._testSuites) {
             if (suite.filename === filename) {
-                return suite
+                return suite;
             }
         }
     }
 
     public addTestCase(filename: string, testCase: TestCase) {
-        let suite = this.getTestSuite(filename)
+        let suite = this.getTestSuite(filename);
         if (!suite) {
-            suite = new TestSuite(filename)
-            this._testSuites.push(suite)
+            suite = new TestSuite(filename);
+            this._testSuites.push(suite);
         }
 
-        suite.addTestCase(testCase)
+        suite.addTestCase(testCase);
     }
 
     public deleteTestCase(fileName: string, testMethodName: string) {
-        const suite = this.getTestSuite(fileName)
+        const suite = this.getTestSuite(fileName);
         if (!suite) {
-            logger.warning(`Failed to delete test case ${fileName}>${testMethodName}`)
+            logger.warning(`Failed to delete test case ${fileName}>${testMethodName}`);
         } else {
-            logger.debug(`Deleting test case ${fileName}>${testMethodName}`)
-            suite.removeTestCase(testMethodName)
+            logger.debug(`Deleting test case ${fileName}>${testMethodName}`);
+            suite.removeTestCase(testMethodName);
         }
     }
 }

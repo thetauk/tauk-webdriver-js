@@ -23,11 +23,11 @@ export abstract class TestCase {
     private _view?: string;
     private _codeContext: CodeContext[] = [];
 
-    private _browserDebugger = {address: '', pageId: ''}
-    private _attachments = {}
-    private _tags: { [key: string]: string } = {}
-    private _userData: { [key: string]: string | number } = {}
-    private _log = [{}]
+    private _browserDebugger = {address: '', pageId: ''};
+    private _attachments = {};
+    private _tags: { [key: string]: string } = {};
+    private _userData: { [key: string]: string | number } = {};
+    private _log = [{}];
 
     protected constructor() {
         this.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;

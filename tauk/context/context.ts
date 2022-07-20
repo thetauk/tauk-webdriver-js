@@ -2,19 +2,19 @@ import { TestData } from "./testData";
 import { TaukConfig } from "../config";
 import { TaukApi } from "../api";
 
-export class TaukContext {
-    private readonly _projectRootDir: string
-    public testData: TestData
-    public api: TaukApi
+export  class TaukContext {
+    private readonly _projectRootDir: string;
+    public testData: TestData;
+    public api: TaukApi;
 
-    public runId?: string
+    public runId?: string;
 
     constructor(public taukConfig: TaukConfig) {
-        this.testData = new TestData()
-        this.api = new TaukApi(taukConfig.apiToken!, taukConfig.projectId!, taukConfig.multiProcessRun)
-        this._projectRootDir = taukConfig.projectRootDir
+        this.testData = new TestData();
+        this.api = new TaukApi(taukConfig.apiToken!, taukConfig.projectId!, taukConfig.multiProcessRun);
+        this._projectRootDir = taukConfig.projectRootDir;
 
-        this.initRun()
+        this.initRun();
     }
 
     get projectRootDir(): string {
@@ -30,6 +30,6 @@ export class TaukContext {
             } finally {
                 // TODO: ?
             }
-        })()
+        })();
     }
 }

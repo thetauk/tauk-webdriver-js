@@ -45,25 +45,25 @@ const setupLogger = () => {
                 symlinkName: 'tauk-webdriver-js.log'
             })
         ],
-    })
-    l.debug('Initialized logger')
+    });
+    l.debug('Initialized logger');
     return l;
 }
 
-const logger = setupLogger()
+const logger = setupLogger();
 
 
 class Tauk {
-    private static instance: PrivateTauk
-    private static _context: TaukContext
+    private static instance: PrivateTauk;
+    private static _context: TaukContext;
 
     private constructor() {
-        throw new Error('Use Tauk.getInstance()')
+        throw new Error('Use Tauk.getInstance()');
     }
 
     private static destroy(eventType: any) { // TODO: Create event type field
         // TODO: Setup exit handler
-        // throw Error('destroy')
+        // throw new Error('destroy')
 
     }
 
@@ -71,13 +71,13 @@ class Tauk {
         if (!Tauk.instance) {
             // this.setupLogger()
             if (!taukConfig) {
-                taukConfig = new TaukConfig()
+                taukConfig = new TaukConfig();
             }
             logger.debug(`Creating new Tauk instance with config [${JSON.stringify(taukConfig)}]`)
             Tauk.instance = new PrivateTauk(taukConfig);
-            Tauk._context = new TaukContext(taukConfig)
+            Tauk._context = new TaukContext(taukConfig);
 
-            process.on('exit', Tauk.destroy)
+            process.on('exit', Tauk.destroy);
 
         }
 
@@ -95,8 +95,7 @@ class PrivateTauk {
     private static config: TaukConfig
 
     constructor(taukConfig: TaukConfig) {
-
-        PrivateTauk.config = taukConfig
+        PrivateTauk.config = taukConfig;
     }
 }
 

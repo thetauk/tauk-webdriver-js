@@ -4,9 +4,9 @@ import { TestCase } from "./testCase";
 
 export class TestSuite {
     private _filename!: string;
-    private _name?: string | undefined
-    private _className?: string | undefined
-    private _testCases: TestCase[] = []
+    private _name?: string | undefined;
+    private _className?: string | undefined;
+    private _testCases: TestCase[] = [];
 
     constructor(filename: string) {
         this.filename = filename;
@@ -43,17 +43,17 @@ export class TestSuite {
     public addTestCase(testCase: TestCase) {
         for (const test of this._testCases) {
             if (test.methodName === testCase.methodName) {
-                throw new TaukException('cannot use TaukListener and Observer() for the same test')
+                throw new TaukException('cannot use TaukListener and Observer() for the same test');
             }
         }
 
-        this._testCases.push(testCase)
+        this._testCases.push(testCase);
     }
 
     public removeTestCase(testMethodName: string) {
         this._testCases.forEach((item, index, object) => {
             if (item.methodName === testMethodName) {
-                this._testCases.splice(index, 1)
+                this._testCases.splice(index, 1);
             }
         })
     }
@@ -61,7 +61,7 @@ export class TestSuite {
     public getTestCase(testName: string): TestCase | undefined {
         for (const test of this._testCases) {
             if (test.customName === testName || test.methodName === testName) {
-                return test
+                return test;
             }
         }
     }
